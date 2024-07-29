@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import GalleryScreen from './GalleryScreen';
-import FullScreenImageScreen from './FullScreenImageScreen';
+import GalleryScreen from './Gallery';
+import FullScreenImageScreen from './FullScreenImage';
 import AlbumScreen from './AlbumScreen';
+import TimelineScreen from './Timeline'; 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -11,6 +12,7 @@ export type RootStackParamList = {
   Gallery: undefined;
   Album: { albumId: string, title: string };
   FullScreenImage: { uri: string };
+  Timeline: undefined; 
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -37,12 +39,12 @@ export default function App() {
           name="Gallery"
           component={GalleryScreen}
           options={{
-            title: 'Nothing Gallery',
+            title: 'Albums',
             headerStyle: {
               backgroundColor: 'black',
             },
             headerTitleStyle: {
-              fontFamily: 'nothing', 
+              fontFamily: 'nothing',
               fontSize: 30,
             },
             headerTintColor: 'white',
@@ -67,6 +69,21 @@ export default function App() {
           name="FullScreenImage"
           component={FullScreenImageScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Timeline"
+          component={TimelineScreen} 
+          options={{
+            title: 'Timeline',
+            headerStyle: {
+              backgroundColor: 'black',
+            },
+            headerTitleStyle: {
+              fontFamily: 'nothing',
+              fontSize: 30,
+            },
+            headerTintColor: 'white',
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
