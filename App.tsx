@@ -3,12 +3,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import GalleryScreen from './GalleryScreen';
 import FullScreenImageScreen from './FullScreenImageScreen';
+import AlbumScreen from './AlbumScreen';
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-
 export type RootStackParamList = {
   Gallery: undefined;
+  Album: { albumId: string, title: string };
   FullScreenImage: { uri: string };
 };
 
@@ -29,8 +30,6 @@ export default function App() {
     return null;
   }
 
-
-
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Gallery">
@@ -49,7 +48,26 @@ export default function App() {
             headerTintColor: 'white',
           }}
         />
-        <Stack.Screen name="FullScreenImage" component={FullScreenImageScreen} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="Album"
+          component={AlbumScreen}
+          options={({ route }) => ({
+            title: route.params.title,
+            headerStyle: {
+              backgroundColor: 'black',
+            },
+            headerTitleStyle: {
+              fontFamily: 'nothing',
+              fontSize: 30,
+            },
+            headerTintColor: 'white',
+          })}
+        />
+        <Stack.Screen
+          name="FullScreenImage"
+          component={FullScreenImageScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
