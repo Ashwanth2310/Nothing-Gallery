@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, FlatList, TouchableOpacity, StyleSheet, Dimensions, Text ,Button} from 'react-native';
+import { View, Image, FlatList, TouchableOpacity, StyleSheet, Dimensions, Text } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './App';
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-
 
 type GalleryScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Gallery'>;
 
@@ -57,7 +56,7 @@ const GalleryScreen: React.FC<GalleryScreenProps> = ({ navigation }) => {
           }
           return null;
         }));
-  
+
         setAlbums(imageAlbums.filter((album): album is Album => album !== null) as Album[]);
       }
     })();
@@ -74,11 +73,16 @@ const GalleryScreen: React.FC<GalleryScreenProps> = ({ navigation }) => {
         <Text style={styles.albumTitle}>{item.title} </Text>
       </View>
     </TouchableOpacity>
-    
   );
 
   return (
     <View style={styles.screen}>
+      <TouchableOpacity 
+        style={styles.button} 
+        onPress={() => navigation.navigate('Timeline')}
+      >
+        <Text style={styles.buttonText}>Go to Timeline </Text>
+      </TouchableOpacity>
       <FlatList
         data={albums}
         renderItem={renderItem}
@@ -86,13 +90,7 @@ const GalleryScreen: React.FC<GalleryScreenProps> = ({ navigation }) => {
         numColumns={3}
         contentContainerStyle={styles.container}
       />
-      <Button
-        title="Go to Timeline"
-        onPress={() => navigation.navigate('Timeline')}
-        color="grey"
-      />
     </View>
-    
   );
 };
 
@@ -107,6 +105,18 @@ const styles = StyleSheet.create({
   container: {
     padding: 2,
   },
+  button: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    margin: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontFamily:"nothing"
+  },
   albumContainer: {
     alignItems: 'center',
     margin: 4,
@@ -115,11 +125,12 @@ const styles = StyleSheet.create({
     width: imageSize,
     height: imageSize,
     backgroundColor: '#cccccc',
+    borderRadius:7
   },
   albumTitle: {
     color: 'white',
     marginTop: 4,
-    fontFamily:"nothing",
+    fontFamily: "nothing",
   },
 });
 
