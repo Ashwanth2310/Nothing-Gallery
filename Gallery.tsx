@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, FlatList, TouchableOpacity, StyleSheet, Dimensions, Text } from 'react-native';
+import { View, Image, FlatList, TouchableOpacity, StyleSheet, Dimensions, Text ,Button} from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './App';
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
 
 type GalleryScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Gallery'>;
 
@@ -12,39 +15,50 @@ interface Album {
   thumbnailUri: string | null;
 }
 
-// Define the Props interface for the GalleryScreen component
 interface GalleryScreenProps {
-  navigation: GalleryScreenNavigationProp; // Injected by React Navigation
+  navigation: GalleryScreenNavigationProp; 
 }
 
 const GalleryScreen: React.FC<GalleryScreenProps> = ({ navigation }) => {
   const [albums, setAlbums] = useState<Album[]>([]);
+  const [fontsLoaded, error] = useFonts({
+    "nothing": require("./assets/fonts/nothingfont.otf")
+  });
+
+  React.useEffect(() => {
+    if (fontsLoaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, error]);
+
+  if (!fontsLoaded && !error) {
+    return null;
+  }
 
   useEffect(() => {
     (async () => {
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status === 'granted') {
         const fetchedAlbums = await MediaLibrary.getAlbumsAsync();
-        const imageAlbums = await Promise.all(fetchedAlbums.map(async (album) => {
+        const imageAlbums: (Album | null)[] = await Promise.all(fetchedAlbums.map(async (album) => {
           const { assets } = await MediaLibrary.getAssetsAsync({
             album: album.id,
             mediaType: 'photo',
-            first: 1
+            first: 1000,
+            sortBy: [[MediaLibrary.SortBy.creationTime, false]], 
           });
           if (assets.length > 0) {
-            // Get the latest image in the album
-            const latestImage = assets[assets.length - 1];
+            const latestImage = assets[0]; 
             return {
               id: album.id,
               title: album.title,
               thumbnailUri: latestImage.uri,
-            };
+            } as Album;
           }
           return null;
         }));
-
-        // Filter out albums that have no images
-        setAlbums(imageAlbums.filter((album): album is Album => album !== null));
+  
+        setAlbums(imageAlbums.filter((album): album is Album => album !== null) as Album[]);
       }
     })();
   }, []);
@@ -60,6 +74,7 @@ const GalleryScreen: React.FC<GalleryScreenProps> = ({ navigation }) => {
         <Text style={styles.albumTitle}>{item.title} </Text>
       </View>
     </TouchableOpacity>
+    
   );
 
   return (
@@ -71,7 +86,13 @@ const GalleryScreen: React.FC<GalleryScreenProps> = ({ navigation }) => {
         numColumns={3}
         contentContainerStyle={styles.container}
       />
+      <Button
+        title="Go to Timeline"
+        onPress={() => navigation.navigate('Timeline')}
+        color="grey"
+      />
     </View>
+    
   );
 };
 
@@ -98,6 +119,7 @@ const styles = StyleSheet.create({
   albumTitle: {
     color: 'white',
     marginTop: 4,
+    fontFamily:"nothing",
   },
 });
 
