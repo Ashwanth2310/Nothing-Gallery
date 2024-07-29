@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     width: imageSize,
     height: imageSize,
     margin: 4,
+    borderRadius:8
   },
 });
 
