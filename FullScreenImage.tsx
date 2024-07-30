@@ -49,10 +49,9 @@ const FullScreenImageScreen: React.FC<Props> = ({ route, navigation }) => {
       let updatedFavorites = [...favorites];
       if (isFavorited) {
         updatedFavorites = updatedFavorites.filter(favorite => favorite !== uri);
-        Alert.alert('Removed from Favorites', 'This image has been removed from your favorites.');
+        
       } else {
         updatedFavorites.push(uri);
-        Alert.alert('Added to Favorites', 'This image has been added to your favorites.');
       }
       await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
       setFavorites(updatedFavorites);
