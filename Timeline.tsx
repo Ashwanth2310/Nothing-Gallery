@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, FlatList, TouchableOpacity, StyleSheet, Dimensions, Text, SectionList } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './App';
 
 interface Photo {
   uri: string;
@@ -15,9 +18,12 @@ interface SectionData {
   data: Photo[];
 }
 
+type TimelineScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Timeline'>;
+
 const TimelineScreen: React.FC = () => {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [sections, setSections] = useState<SectionData[]>([]);
+  const navigation = useNavigation<TimelineScreenNavigationProp>();
 
   const [fontsLoaded, error] = useFonts({
     "nothing": require("./assets/fonts/nothingfont.otf")
@@ -32,15 +38,15 @@ const TimelineScreen: React.FC = () => {
   if (!fontsLoaded && !error) {
     return null;
   }
+
   useEffect(() => {
     (async () => {
       const { assets } = await MediaLibrary.getAssetsAsync({
         mediaType: 'photo',
         sortBy: [[MediaLibrary.SortBy.creationTime, false]],
-        first: 1000, 
+        first: 1000,
       });
 
-      
       const groupedPhotos = assets.reduce((acc, photo) => {
         const date = new Date(photo.creationTime).toDateString();
         if (!acc[date]) {
@@ -54,7 +60,6 @@ const TimelineScreen: React.FC = () => {
         return acc;
       }, {} as Record<string, Photo[]>);
 
-      
       const sectionsData = Object.keys(groupedPhotos).map(date => ({
         title: date,
         data: groupedPhotos[date],
@@ -69,8 +74,15 @@ const TimelineScreen: React.FC = () => {
     })();
   }, []);
 
+  const handlePress = (photo: Photo) => {
+    navigation.navigate('FullScreenImage', {
+      photos: photos,
+      index: photos.findIndex(p => p.id === photo.id),
+    });
+  };
+
   const renderItem = ({ item }: { item: Photo }) => (
-    <TouchableOpacity onPress={() => { /* Handle photo click */ }}>
+    <TouchableOpacity onPress={() => handlePress(item)}>
       <Image source={{ uri: item.uri }} style={styles.thumbnail} />
     </TouchableOpacity>
   );
@@ -102,12 +114,11 @@ const styles = StyleSheet.create({
   sectionHeader: {
     padding: 10,
     backgroundColor: 'black',
-   
   },
   sectionTitle: {
     color: 'white',
     fontSize: 22,
-    fontFamily:"nothing" 
+    fontFamily: "nothing"
   },
   thumbnail: {
     width: imageSize,
@@ -117,5 +128,3 @@ const styles = StyleSheet.create({
 });
 
 export default TimelineScreen;
-
-
