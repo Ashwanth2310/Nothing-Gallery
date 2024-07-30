@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
@@ -22,27 +22,56 @@ const FullScreenImageScreen: React.FC<Props> = ({ route, navigation }) => {
     url: photo.uri,
   }));
 
-  const addToFavorites = async (uri: string) => {
-    try {
-      const existingFavorites = await AsyncStorage.getItem('favorites');
-      const favorites = existingFavorites ? JSON.parse(existingFavorites) : [];
-      if (!favorites.includes(uri)) {
-        favorites.push(uri);
-        await AsyncStorage.setItem('favorites', JSON.stringify(favorites));
-        Alert.alert('Added to Favorites', 'This image has been added to your favorites.');
-      } else {
-        Alert.alert('Already in Favorites', 'This image is already in your favorites.');
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [currentIndex, setCurrentIndex] = useState<number>(index);
+  const [isFavorited, setIsFavorited] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        const existingFavorites = await AsyncStorage.getItem('favorites');
+        const favoritesList = existingFavorites ? JSON.parse(existingFavorites) : [];
+        setFavorites(favoritesList);
+      } catch (error) {
+        console.error('Error fetching favorites:', error);
       }
+    };
+
+    fetchFavorites();
+  }, []);
+
+  useEffect(() => {
+    setIsFavorited(favorites.includes(images[currentIndex].url));
+  }, [currentIndex, favorites]);
+
+  const toggleFavorite = useCallback(async (uri: string) => {
+    try {
+      let updatedFavorites = [...favorites];
+      if (isFavorited) {
+        updatedFavorites = updatedFavorites.filter(favorite => favorite !== uri);
+        Alert.alert('Removed from Favorites', 'This image has been removed from your favorites.');
+      } else {
+        updatedFavorites.push(uri);
+        Alert.alert('Added to Favorites', 'This image has been added to your favorites.');
+      }
+      await AsyncStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+      setFavorites(updatedFavorites);
+      setIsFavorited(!isFavorited);
     } catch (error) {
-      console.error('Error adding to favorites:', error);
+      console.error('Error updating favorites:', error);
     }
-  };
+  }, [favorites, isFavorited]);
 
   return (
     <View style={styles.container}>
       <ImageViewer
         imageUrls={images}
-        index={index}
+        index={currentIndex}
+        onChange={(index) => {
+          if (index !== undefined) {
+            setCurrentIndex(index);
+          }
+        }}
         renderIndicator={() => <></>}
       />
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
@@ -50,9 +79,13 @@ const FullScreenImageScreen: React.FC<Props> = ({ route, navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity 
         style={styles.favoriteButton} 
-        onPress={() => addToFavorites(images[index].url)}
+        onPress={() => toggleFavorite(images[currentIndex].url)}
       >
-        <Ionicons name="heart" size={32} color="white" />
+        <Ionicons 
+          name={isFavorited ? "heart" : "heart-outline"} 
+          size={32} 
+          color="white" 
+        />
       </TouchableOpacity>
     </View>
   );
