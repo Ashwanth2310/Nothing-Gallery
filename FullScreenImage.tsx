@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import ImageViewer from 'react-native-image-zoom-viewer';
 import { RootStackParamList } from './App';
 
 type FullScreenImageScreenRouteProp = RouteProp<RootStackParamList, 'FullScreenImage'>;
@@ -15,10 +16,14 @@ type Props = {
 
 const FullScreenImageScreen: React.FC<Props> = ({ route, navigation }) => {
   const { uri } = route.params;
+  const images = [{ url: uri }];
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri }} style={styles.image} resizeMode="contain" />
+      <ImageViewer 
+        imageUrls={images} 
+        renderIndicator={() => <></>} 
+      />
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Ionicons name="close" size={32} color="white" />
       </TouchableOpacity>
@@ -30,11 +35,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
-  },
-  image: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
   },
   backButton: {
     position: 'absolute',
