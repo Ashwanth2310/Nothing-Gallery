@@ -77,12 +77,20 @@ const GalleryScreen: React.FC<GalleryScreenProps> = ({ navigation }) => {
 
   return (
     <View style={styles.screen}>
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={() => navigation.navigate('Timeline')}
-      >
-        <Text style={styles.buttonText}>Go to Timeline </Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={() => navigation.navigate('Timeline')}
+        >
+          <Text style={styles.buttonText}>Timeline</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={() => navigation.navigate('Favorites')}
+        >
+          <Text style={styles.buttonText}>Favorites</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={albums}
         renderItem={renderItem}
@@ -105,17 +113,22 @@ const styles = StyleSheet.create({
   container: {
     padding: 2,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    margin: 10,
+  },
   button: {
     backgroundColor: 'red',
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
-    margin: 10,
+    width:175
   },
   buttonText: {
     color: 'white',
     fontSize: 18,
-    fontFamily:"nothing"
+    fontFamily:"nothing",
   },
   albumContainer: {
     alignItems: 'center',
@@ -125,7 +138,7 @@ const styles = StyleSheet.create({
     width: imageSize,
     height: imageSize,
     backgroundColor: '#cccccc',
-    borderRadius:7
+    borderRadius:7,
   },
   albumTitle: {
     color: 'white',

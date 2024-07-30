@@ -5,6 +5,7 @@ import GalleryScreen from './Gallery';
 import FullScreenImageScreen from './FullScreenImage';
 import AlbumScreen from './AlbumScreen';
 import TimelineScreen from './Timeline'; 
+import FavoritesScreen from './Favorites'; 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { Photo } from './types'; 
@@ -14,6 +15,7 @@ export type RootStackParamList = {
   Album: { albumId: string, title: string };
   FullScreenImage: { photos: Photo[]; index: number };
   Timeline: undefined; 
+  Favorites: undefined;  
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -76,6 +78,21 @@ export default function App() {
           component={TimelineScreen} 
           options={{
             title: 'Timeline',
+            headerStyle: {
+              backgroundColor: 'black',
+            },
+            headerTitleStyle: {
+              fontFamily: 'nothing',
+              fontSize: 30,
+            },
+            headerTintColor: 'white',
+          }}
+        />
+        <Stack.Screen
+          name="Favorites"  
+          component={FavoritesScreen}
+          options={{
+            title: 'Favorites',
             headerStyle: {
               backgroundColor: 'black',
             },
