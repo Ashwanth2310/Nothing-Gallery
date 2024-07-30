@@ -32,13 +32,15 @@ const AlbumScreen: React.FC<AlbumScreenProps> = ({ navigation, route }) => {
         mediaType: 'photo',
         first: 100, 
         sortBy: [[MediaLibrary.SortBy.creationTime, false]],
-        
       });
       if (assets.length > 0) {
-        setPhotos((prevPhotos) => [...prevPhotos, ...assets.map((asset) => ({
-          uri: asset.uri,
-          id: asset.id,
-        }))]);
+        setPhotos((prevPhotos) => [
+          ...prevPhotos,
+          ...assets.map((asset) => ({
+            uri: asset.uri,
+            id: asset.id,
+          }))
+        ]);
         if (assets.length < 100 || (page + 1) * 100 >= totalCount) {
           setHasMore(false);
         }
@@ -62,8 +64,10 @@ const AlbumScreen: React.FC<AlbumScreenProps> = ({ navigation, route }) => {
     }
   };
 
-  const renderItem = ({ item }: { item: Photo }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('FullScreenImage', { uri: item.uri })}>
+  const renderItem = ({ item, index }: { item: Photo; index: number }) => (
+    <TouchableOpacity
+      onPress={() => navigation.navigate('FullScreenImage', { photos, index })}
+    >
       <Image source={{ uri: item.uri }} style={styles.thumbnail} />
     </TouchableOpacity>
   );
@@ -102,7 +106,7 @@ const styles = StyleSheet.create({
     width: imageSize,
     height: imageSize,
     margin: 4,
-    borderRadius:8
+    borderRadius: 8,
   },
 });
 
