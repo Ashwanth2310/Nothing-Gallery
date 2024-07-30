@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/stack": "^6.4.1",
     "expo": "^51.0.22",
@@ -24,7 +25,7 @@
     "react-native": "0.74.3",
     "react-native-image-zoom-viewer": "^3.0.1",
     "react-native-screens": "3.31.1",
-    "@react-native-async-storage/async-storage": "1.23.1"
+    "react-native-toast-message": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

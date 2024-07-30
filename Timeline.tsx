@@ -81,22 +81,31 @@ const TimelineScreen: React.FC = () => {
     });
   };
 
-  const renderItem = ({ item }: { item: Photo }) => (
+  const renderPhotoItem = ({ item }: { item: Photo }) => (
     <TouchableOpacity onPress={() => handlePress(item)}>
       <Image source={{ uri: item.uri }} style={styles.thumbnail} />
     </TouchableOpacity>
+  );
+
+  const renderSectionHeader = ({ section: { title, data } }: { section: SectionData }) => (
+    <View style={styles.sectionHeader}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <FlatList
+        data={data}
+        renderItem={renderPhotoItem}
+        keyExtractor={(item) => item.id}
+        numColumns={3}
+        columnWrapperStyle={styles.row}
+      />
+    </View>
   );
 
   return (
     <View style={styles.screen}>
       <SectionList
         sections={sections}
-        renderItem={renderItem}
-        renderSectionHeader={({ section: { title } }) => (
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>{title}</Text>
-          </View>
-        )}
+        renderItem={() => null} // No need to render individual items here
+        renderSectionHeader={renderSectionHeader}
         keyExtractor={(item) => item.id}
       />
     </View>
@@ -112,7 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   sectionHeader: {
-    padding: 10,
+    padding: 5,
     backgroundColor: 'black',
   },
   sectionTitle: {
@@ -120,10 +129,14 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontFamily: "nothing"
   },
+  row: {
+    justifyContent: 'flex-start',
+  },
   thumbnail: {
     width: imageSize,
     height: imageSize,
     margin: 4,
+    borderRadius:8
   },
 });
 
