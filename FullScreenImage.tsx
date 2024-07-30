@@ -15,14 +15,18 @@ type Props = {
 };
 
 const FullScreenImageScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { uri } = route.params;
-  const images = [{ url: uri }];
+  const { photos, index } = route.params;
+
+  const images = photos.map((photo: { uri: string }) => ({
+    url: photo.uri,
+  }));
 
   return (
     <View style={styles.container}>
-      <ImageViewer 
-        imageUrls={images} 
-        renderIndicator={() => <></>} 
+      <ImageViewer
+        imageUrls={images}
+        index={index}
+        renderIndicator={() => <></>}
       />
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Ionicons name="close" size={32} color="white" />

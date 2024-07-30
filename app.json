@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "NothingGallery",
-    "slug": "NothingGallery",
+    "name": "Nothing Gallery",
+    "slug": "Nothing Gallery",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

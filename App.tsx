@@ -7,11 +7,12 @@ import AlbumScreen from './AlbumScreen';
 import TimelineScreen from './Timeline'; 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { Photo } from './types'; 
 
 export type RootStackParamList = {
   Gallery: undefined;
   Album: { albumId: string, title: string };
-  FullScreenImage: { uri: string };
+  FullScreenImage: { photos: Photo[]; index: number };
   Timeline: undefined; 
 };
 
