@@ -1,37 +1,15 @@
 {
   "expo": {
-    "name": "Nothing Gallery",
-    "slug": "Nothing Gallery",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#000000"
-      },
-      "package": "com.ash_ed.NothingGallery"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-video",
-      "expo-font"
-    ],
     "extra": {
       "eas": {
-        "projectId": "92555d12-af1a-4e57-83db-286cf7d24383"
+        "projectId": "b97578f7-ae43-4c0a-bf9c-23b6bf73c318"
       }
+    },
+    "android": {
+      "package": "com.ash_ed.nothinggallery"
+    },
+    "ios": {
+      "bundleIdentifier": "idk"
     }
   }
 }
